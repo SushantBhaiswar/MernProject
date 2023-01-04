@@ -1,7 +1,27 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-const product = require("./router.js/productRoute");
-app.use(express.json());
-app.use("/api/v1", product);
+const route = require("./router.js/Routes")
+require("dotenv").config()
 
-module.exports = app;
+app.use(express.json());
+
+mongoose
+    .connect(process.env.DB, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then((data) =>
+        console.log("Mogodb is connected with " + data.connection.host)
+    )
+    .catch((err) => console.log(err));
+
+
+app.use("/", route);
+
+app.listen(process.env.PORT  , () => {
+    console.log(`Server is running on port ${process.env.PORT} `);
+});
+
+
+
